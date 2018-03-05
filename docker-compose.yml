@@ -1,5 +1,5 @@
----
 # vim: ft=yaml
+---
 version: '2'
 services:
   jenkins:
@@ -13,8 +13,21 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
-
+    networks:
+      - jenkins_network
   registry:
     image: registry
     ports:
-      - "8082:5000"
+      - "8086:5000"
+    networks:
+      - jenkins_network
+  registry_frontend:
+    image: joxit/docker-registry-ui:static
+    environment:
+      - REGISTRY_URL=http://registry:5000
+    ports:
+      - "8082:80"
+    networks:
+      - jenkins_network
+networks:
+  jenkins_network:
